@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ABDUL RIKASH — CINEMATIC DIGITAL PROFILE
+   ABDULLAH RIKHASH — CINEMATIC DIGITAL PROFILE
    Mobile-First Architecture & Design System
    ========================================================================== */
 
@@ -326,13 +326,14 @@ body::-webkit-scrollbar,
   object-fit: cover;
   object-position: center 82%;
   filter: grayscale(100%) contrast(1.05) brightness(0.92);
-  transform: scale(1.08);
+  transform-origin: top center;
+  transform: translateY(-6%) scale(1.14);
   opacity: 0;
   transition: transform 1600ms var(--ease-cinematic), opacity 1200ms ease;
 }
 
 body.intro-settled .hero-portrait {
-  transform: scale(1);
+  transform: translateY(-6%) scale(1.06);
   opacity: 1;
 }
 
@@ -427,7 +428,7 @@ body.intro-settled .hero-top-credits {
   z-index: 10;
   display: flex;
   flex-direction: column;
-  gap: var(--space-16);
+  gap: 8px;
   opacity: 0;
   transform: translateY(16px);
   transition: opacity 800ms var(--ease-cinematic), transform 800ms var(--ease-cinematic);
@@ -437,6 +438,69 @@ body.intro-settled .hero-bottom-caption {
   opacity: 1;
   transform: translateY(0);
   transition-delay: 400ms;
+}
+
+/* Hero Action Buttons (Save Contact & WhatsApp) */
+.hero-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.btn-hero-action {
+  flex: 1;
+  min-height: 52px;
+  height: 52px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  font-family: var(--font-sans);
+  font-size: clamp(0.72rem, 3vw, 0.8125rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  padding: 0 var(--space-12);
+  box-sizing: border-box;
+  transition: transform 120ms ease, background-color 160ms ease, border-color 160ms ease;
+}
+
+.btn-hero-action:active {
+  transform: scale(0.97);
+}
+
+.btn-hero-primary {
+  background-color: var(--accent-blue);
+  color: #FFFFFF;
+  border: none;
+  box-shadow: 0 4px 16px rgba(8, 102, 248, 0.28);
+}
+
+.btn-hero-primary:hover {
+  background-color: #1a73f8;
+}
+
+.btn-hero-secondary {
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--hairline);
+  font-weight: 500;
+}
+
+.btn-hero-secondary:hover {
+  background-color: var(--bg-surface-elevated);
+  border-color: var(--hairline-bright);
+}
+
+.btn-hero-icon {
+  flex-shrink: 0;
 }
 
 .caption-card {
@@ -1269,19 +1333,22 @@ body.intro-settled .cinematic-colophon-footer {
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: 430px;
+  max-width: min(100vw, 430px);
   display: flex;
   justify-content: center;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .upi-modal-sheet {
   width: 100%;
+  max-width: min(100vw, 430px);
   background-color: var(--bg-surface);
   border-top: 1px solid var(--hairline-bright);
   border-left: 1px solid var(--hairline);
   border-right: 1px solid var(--hairline);
   border-radius: 16px 16px 0 0;
-  padding: var(--space-12) var(--space-24) calc(var(--safe-bottom) + var(--space-24));
+  padding: var(--space-12) var(--space-20) calc(var(--safe-bottom) + var(--space-24));
   box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.9);
   display: flex;
   flex-direction: column;
@@ -1289,6 +1356,8 @@ body.intro-settled .cinematic-colophon-footer {
   transform: translateY(100%);
   transition: transform 340ms var(--ease-cinematic);
   will-change: transform;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .upi-modal.upi-modal-open .upi-modal-sheet {
@@ -1371,6 +1440,8 @@ body.intro-settled .cinematic-colophon-footer {
   gap: var(--space-20);
   width: 100%;
   position: relative;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 /* QR Code Card */
@@ -1380,11 +1451,14 @@ body.intro-settled .cinematic-colophon-footer {
   align-items: center;
   gap: var(--space-8);
   width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .upi-qr-frame {
-  width: 180px;
-  height: 180px;
+  width: min(70vw, 240px);
+  height: min(70vw, 240px);
   background-color: #FFFFFF;
   border-radius: 8px;
   padding: 8px;
@@ -1392,6 +1466,7 @@ body.intro-settled .cinematic-colophon-footer {
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  box-sizing: border-box;
 }
 
 .upi-qr-frame svg {
@@ -1420,6 +1495,8 @@ body.intro-settled .cinematic-colophon-footer {
   border: 1px solid var(--hairline);
   border-radius: 8px;
   gap: var(--space-12);
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .upi-id-details {
@@ -1427,6 +1504,8 @@ body.intro-settled .cinematic-colophon-footer {
   flex-direction: column;
   gap: 2px;
   min-width: 0;
+  box-sizing: border-box;
+  flex: 1;
 }
 
 .upi-id-label {
@@ -1439,18 +1518,19 @@ body.intro-settled .cinematic-colophon-footer {
 
 .upi-id-value {
   font-family: var(--font-sans);
-  font-size: 0.875rem;
+  font-size: clamp(0.8rem, 3.6vw, 1rem);
   font-weight: 600;
   color: var(--text-primary);
   letter-spacing: 0.02em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
+  word-break: break-all;
+  min-width: 0;
 }
 
 .btn-copy-upi {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: var(--space-8);
   padding: 8px 14px;
   background-color: var(--accent-blue);
@@ -1464,12 +1544,60 @@ body.intro-settled .cinematic-colophon-footer {
   text-transform: uppercase;
   cursor: pointer;
   flex-shrink: 0;
+  box-sizing: border-box;
   transition: background-color 160ms ease, transform 120ms ease;
 }
 
 .btn-copy-upi:active {
   transform: scale(0.96);
   background-color: var(--accent-blue-pressed);
+}
+
+/* Narrow Phone UPI Stacking (<=360px) */
+@media (max-width: 360px) {
+  .upi-id-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-10);
+  }
+
+  .btn-copy-upi {
+    width: 100%;
+    min-height: 42px;
+  }
+}
+
+/* Short Screens (<=700px) */
+@media (max-height: 700px) {
+  body.intro-settled .hero-portrait {
+    transform: translateY(-8%) scale(1.08);
+  }
+
+  .hero-poster {
+    padding-top: calc(var(--safe-top) + var(--space-16));
+    padding-bottom: calc(var(--safe-bottom) + var(--space-16));
+    padding-left: var(--space-16);
+    padding-right: var(--space-16);
+  }
+
+  .hero-bottom-caption {
+    gap: 6px;
+  }
+
+  .hero-actions-row {
+    gap: 6px;
+  }
+
+  .btn-hero-action {
+    min-height: 48px;
+    height: 48px;
+    font-size: 0.75rem;
+    padding: 0 var(--space-8);
+  }
+
+  .caption-card {
+    padding: 10px var(--space-16);
+  }
 }
 
 /* Desktop Modal Adaptation (>768px) */
@@ -1512,7 +1640,7 @@ body.intro-settled .cinematic-colophon-footer {
   }
 
   .hero-portrait {
-    transform: scale(1) !important;
+    transform: translateY(-6%) scale(1.06) !important;
     opacity: 1 !important;
   }
 
