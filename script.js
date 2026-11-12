@@ -22,23 +22,16 @@
   };
 
   // UPI Payment Configuration
-  const UPI_CONFIG = {
-    id: 'rikhashp@okaxis',
-    payeeName: 'Abdullah Rikash',
-    url: 'upi://pay?pa=rikhashp@okaxis&pn=Abdul%20Rikash&cu=INR',
-    apps: {
-      gpay: 'gpay://upi/pay?pa=rikhashp@okaxis&pn=Abdul%20Rikash&cu=INR',
-      phonepe: 'phonepe://pay?pa=rikhashp@okaxis&pn=Abdul%20Rikash&cu=INR',
-      paytm: 'paytmmp://pay?pa=rikhashp@okaxis&pn=Abdul%20Rikash&cu=INR'
-    }
-  };
+  const UPI_PAY_URL = "upi://pay?pa=rikhashp@okaxis&pn=" + encodeURIComponent("Abdul Rikash") + "&cu=INR";
+  const UPI_ID = "rikhashp@okaxis";
 
   // DOM Elements
   const introOverlay = document.getElementById('intro-overlay');
   const introSkipBtn = document.getElementById('intro-skip-btn');
   const btnSaveContact = document.getElementById('btn-save-contact');
   const btnShare = document.getElementById('btn-share');
-  const btnPayUpi = document.getElementById('btn-pay-upi');
+  const payUpiBtn = document.getElementById('pay-upi-btn');
+  const upiSheetBtn = document.getElementById('upi-sheet-btn');
   const toastEl = document.getElementById('toast');
   const toastMessageEl = document.getElementById('toast-message');
 
@@ -49,7 +42,6 @@
   const upiQrContainer = document.getElementById('upi-qr-container');
   const btnCopyUpi = document.getElementById('btn-copy-upi');
   const btnCopyUpiText = document.getElementById('btn-copy-upi-text');
-  const upiFallbackNotice = document.getElementById('upi-fallback-notice');
 
   let toastTimeout = null;
   let introTimer = null;
@@ -615,155 +607,108 @@
   // ==========================================================================
   // UPI PAYMENT ORCHESTRATION
   // ==========================================================================
-  let upiLoadingTimer = null;
+  function openUpiModal() {
+    if (!upiModal) return;
 
-  function openUpiModal(options = {}) {
-    const { fallback = false } = options;
+      // Render QR Code once if not yet cached
+      if (!isQrGenerated && upiQrContainer) {
+        upiQrContainer.innerHTML = createQrSvg(UPI_PAY_URL);
+        isQrGenerated = true;
+      }
 
-    if (upiLoadingTimer) clearTimeout(upiLoadingTimer);
-
-    // Set initial loading state (shows minimal spinner)
-    if (upiModal) {
-      upiModal.classList.remove('is-ready');
       upiModal.classList.add('upi-modal-open');
       upiModal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
     }
 
-    if (upiFallbackNotice) {
-      upiFallbackNotice.style.display = fallback ? 'block' : 'none';
+    function closeUpiModal() {
+      if (!upiModal) return;
+      upiModal.classList.remove('upi-modal-open');
+      upiModal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
     }
 
-    // Generate QR Code if not yet cached
-    if (!isQrGenerated && upiQrContainer) {
-      upiQrContainer.innerHTML = createQrSvg(UPI_CONFIG.url);
-      isQrGenerated = true;
-    }
-
-    // Cinematic opening transition: show spinner briefly (~360ms) then reveal content
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const delay = prefersReducedMotion ? 0 : 360;
-
-    upiLoadingTimer = setTimeout(() => {
-      if (upiModal && upiModal.classList.contains('upi-modal-open')) {
-        upiModal.classList.add('is-ready');
-      }
-    }, delay);
-  }
-
-  function closeUpiModal() {
-    if (upiLoadingTimer) clearTimeout(upiLoadingTimer);
-    if (!upiModal) return;
-    upiModal.classList.remove('upi-modal-open', 'is-ready');
-    upiModal.setAttribute('aria-hidden', 'true');
-  }
-
-  async function copyUpiId() {
-    try {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(UPI_CONFIG.id);
-      } else {
-        const textarea = document.createElement('textarea');
-        textarea.value = UPI_CONFIG.id;
-        textarea.style.position = 'fixed';
-        textarea.style.opacity = '0';
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-      }
-
-      if (btnCopyUpiText) {
-        btnCopyUpiText.textContent = 'Copied!';
-        setTimeout(() => {
-          btnCopyUpiText.textContent = 'Copy';
-        }, 2000);
-      }
-      showToast('UPI ID copied to clipboard');
-    } catch (err) {
-      showToast('Could not copy UPI ID');
-    }
-  }
-
-  function handlePayUpiClick(e) {
-    if (e) e.preventDefault();
-
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera || '';
-    const isAndroid = /android/i.test(userAgent);
-    const isIOS = /iPad|iPhone|iPod/.test(userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    const isDesktop = window.innerWidth > 768 || (!('ontouchstart' in window) && navigator.maxTouchPoints === 0);
-
-    if (isAndroid) {
-      // Android Native UPI App Chooser Intent
-      let appLaunched = false;
-      const onVisibilityChange = () => {
-        if (document.hidden) {
-          appLaunched = true;
+    async function copyUpiId() {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(UPI_ID);
+        } else {
+          const textarea = document.createElement('textarea');
+          textarea.value = UPI_ID;
+          textarea.style.position = 'fixed';
+          textarea.style.opacity = '0';
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
         }
-      };
-      document.addEventListener('visibilitychange', onVisibilityChange, { once: true });
 
-      // Direct protocol handler
-      window.location.href = UPI_CONFIG.url;
-
-      // Fallback timer: 1.5 seconds
-      setTimeout(() => {
-        document.removeEventListener('visibilitychange', onVisibilityChange);
-        if (!appLaunched && !document.hidden) {
-          openUpiModal({ fallback: true });
+        if (btnCopyUpiText) {
+          btnCopyUpiText.textContent = 'Copied!';
+          setTimeout(() => {
+            btnCopyUpiText.textContent = 'Copy';
+          }, 2000);
         }
-      }, 1500);
-      return;
-    }
-
-    if (isIOS) {
-      // iOS: Bottom sheet with direct app triggers & copy
-      openUpiModal({ fallback: false });
-      return;
-    }
-
-    // Desktop: Modal with QR code for scanning
-    openUpiModal({ fallback: false });
-  }
-
-  // ==========================================================================
-  // EVENT BINDINGS
-  // ==========================================================================
-  if (btnSaveContact) {
-    btnSaveContact.addEventListener('click', downloadVCard);
-  }
-
-  if (btnShare) {
-    btnShare.addEventListener('click', shareProfile);
-  }
-
-  if (btnPayUpi) {
-    btnPayUpi.addEventListener('click', handlePayUpiClick);
-  }
-
-  if (btnCopyUpi) {
-    btnCopyUpi.addEventListener('click', copyUpiId);
-  }
-
-  if (upiModalClose) {
-    upiModalClose.addEventListener('click', closeUpiModal);
-  }
-
-  if (upiModalBackdrop) {
-    upiModalBackdrop.addEventListener('click', closeUpiModal);
-  }
-
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      if (upiModal && upiModal.classList.contains('upi-modal-open')) {
-        closeUpiModal();
+        showToast('UPI ID copied to clipboard');
+      } catch (err) {
+        showToast('Could not copy UPI ID');
       }
     }
-  });
 
-  // Start sequence when DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initIntroSequence);
-  } else {
-    initIntroSequence();
-  }
-})();
+      function handlePayUpiClick() {
+        const userAgent = navigator.userAgent || '';
+        const isMobile = /Android|iPhone|iPad|iPod/i.test(userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+          if (isMobile) {
+            window.location.href = "upi://pay?pa=rikhashp@okaxis&pn=" + encodeURIComponent("Abdul Rikash") + "&cu=INR";
+          } else {
+            openUpiModal();
+          }
+        }
+
+        // ==========================================================================
+        // EVENT BINDINGS
+        // ==========================================================================
+        if (btnSaveContact) {
+          btnSaveContact.addEventListener('click', downloadVCard);
+        }
+
+        if (btnShare) {
+          btnShare.addEventListener('click', shareProfile);
+        }
+
+          if (payUpiBtn) {
+            payUpiBtn.addEventListener('click', handlePayUpiClick);
+          }
+
+          if (upiSheetBtn) {
+            upiSheetBtn.addEventListener('click', openUpiModal);
+          }
+
+          if (btnCopyUpi) {
+            btnCopyUpi.addEventListener('click', copyUpiId);
+          }
+
+          if (upiModalClose) {
+            upiModalClose.addEventListener('click', closeUpiModal);
+          }
+
+          if (upiModalBackdrop) {
+            upiModalBackdrop.addEventListener('click', closeUpiModal);
+          }
+
+          window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+              if (upiModal && upiModal.classList.contains('upi-modal-open')) {
+                closeUpiModal();
+              }
+            }
+          });
+
+          // Start sequence when DOM is ready
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initIntroSequence);
+          } else {
+            initIntroSequence();
+          }
+        }) ();

@@ -934,6 +934,30 @@ body.intro-settled .actions-section {
   gap: var(--space-12);
 }
 
+.pay-upi-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.action-row-qr-wrap {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.action-qr-icon {
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  transition: color 200ms ease;
+}
+
+.btn-action-row:hover .action-qr-icon {
+  color: var(--accent-blue);
+}
+
 .btn-action-row {
   min-height: 54px;
   padding: var(--space-12) var(--space-20);
@@ -1344,79 +1368,9 @@ body.intro-settled .cinematic-colophon-footer {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: var(--space-20);
   width: 100%;
   position: relative;
-  min-height: 240px;
-}
-
-/* Loading Spinner State */
-.upi-loader {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-16);
-  padding: var(--space-48) var(--space-24);
-  width: 100%;
-  min-height: 240px;
-  transition: opacity 200ms ease;
-}
-
-.upi-spinner {
-  width: 32px;
-  height: 32px;
-  border: 2px solid rgba(237, 235, 230, 0.12);
-  border-top-color: var(--accent-blue);
-  border-radius: 50%;
-  animation: upiSpinner 650ms linear infinite;
-  will-change: transform;
-}
-
-@keyframes upiSpinner {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.upi-loader-text {
-  font-size: 0.5625rem;
-  font-weight: 600;
-  letter-spacing: 0.22em;
-  color: var(--text-dim);
-  text-transform: uppercase;
-}
-
-/* Content View with Smooth Crossfade */
-.upi-content-view {
-  width: 100%;
-  display: none;
-  flex-direction: column;
-  gap: var(--space-16);
-  align-items: center;
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 280ms var(--ease-cinematic), transform 280ms var(--ease-cinematic);
-}
-
-.upi-modal.is-ready .upi-loader {
-  display: none;
-}
-
-.upi-modal.is-ready .upi-content-view {
-  display: flex;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Fallback Notice */
-.upi-fallback-notice {
-  width: 100%;
-  padding: var(--space-12) var(--space-16);
-  background-color: rgba(8, 102, 248, 0.08);
-  border: 1px solid rgba(8, 102, 248, 0.25);
-  border-radius: 8px;
-  font-size: 0.75rem;
-  line-height: 1.4;
-  color: var(--text-secondary);
 }
 
 /* QR Code Card */
@@ -1516,54 +1470,6 @@ body.intro-settled .cinematic-colophon-footer {
 .btn-copy-upi:active {
   transform: scale(0.96);
   background-color: var(--accent-blue-pressed);
-}
-
-/* Direct App Links (Google Pay, PhonePe, Paytm) */
-.upi-apps-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-8);
-  width: 100%;
-}
-
-.upi-app-btn {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--space-12);
-  background-color: var(--bg-surface-elevated);
-  border: 1px solid var(--hairline);
-  border-radius: 8px;
-  color: var(--text-secondary);
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 500;
-  text-decoration: none;
-  cursor: pointer;
-  transition: border-color 200ms ease, background-color 200ms ease, color 200ms ease;
-}
-
-.upi-app-btn:hover {
-  border-color: var(--hairline-bright);
-  color: var(--text-primary);
-  background-color: #1f1f23;
-}
-
-.upi-app-btn:active {
-  transform: scale(0.98);
-}
-
-.upi-modal-footer {
-  border-top: 1px solid var(--hairline);
-  padding-top: var(--space-8);
-  text-align: center;
-}
-
-.upi-footer-meta {
-  font-size: 0.5rem;
-  letter-spacing: 0.22em;
-  color: var(--text-dim);
-  text-transform: uppercase;
 }
 
 /* Desktop Modal Adaptation (>768px) */

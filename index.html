@@ -27,7 +27,7 @@
     href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap"
     rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 
 <body>
@@ -37,7 +37,7 @@
     <div class="intro-curtain intro-curtain-bottom"></div>
     <div class="intro-content">
       <div class="intro-line" id="intro-line"></div>
-      <h1 class="intro-name" id="intro-name">ABDULLAH RIKHASH</h1>
+      <h1 class="intro-name" id="intro-name">ABDUL RIKASH</h1>
       <span class="intro-meta">CALICUT, KERALA</span>
     </div>
     <button type="button" class="intro-skip-btn" id="intro-skip-btn" aria-label="Skip intro">TAP TO SKIP</button>
@@ -61,7 +61,7 @@
         <!-- Upper Hero: In the empty wall space above his head -->
         <header class="hero-top-credits">
           <div class="hero-title-group">
-            <h1 class="hero-display-name">Abdullah Rikhash</h1>
+            <h1 class="hero-display-name">Abdul Rikash</h1>
             <div class="meta-tagline-bar">
               CALICUT, KL <span class="meta-divider" aria-hidden="true"></span>
               <span class="cinematic-location"></span>
@@ -217,19 +217,41 @@
 
           <!-- Secondary Actions (Pay via UPI, Direct Email & Share) -->
           <div class="actions-sublist">
-            <!-- Pay via UPI Action -->
-            <button type="button" class="btn-action-row" id="btn-pay-upi" aria-label="Pay via UPI">
-              <div class="action-row-left">
-                <span class="action-tag">INSTANT TRANSFER</span>
-                <span class="action-main-value">Pay via UPI</span>
-              </div>
-              <div class="action-row-right" aria-hidden="true">
-                <svg class="action-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M6 3h12M6 8h12M6 13l8.5 8M6 13h3a4.5 4.5 0 0 0 4.5-4.5v0A4.5 4.5 0 0 0 9 4" />
-                </svg>
-              </div>
-            </button>
+            <!-- Pay via UPI Module -->
+            <div class="pay-upi-card">
+              <button type="button" class="btn-action-row" id="pay-upi-btn" aria-label="Pay via UPI">
+                <div class="action-row-left">
+                  <span class="action-tag">INSTANT TRANSFER</span>
+                  <span class="action-main-value">Pay via UPI</span>
+                </div>
+                <div class="action-row-right" aria-hidden="true">
+                  <svg class="action-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 3h12M6 8h12M6 13l8.5 8M6 13h3a4.5 4.5 0 0 0 4.5-4.5v0A4.5 4.5 0 0 0 9 4" />
+                  </svg>
+                </div>
+              </button>
+              <button type="button" class="btn-action-row" id="upi-sheet-btn" aria-label="Scan QR code or view UPI ID">
+                <div class="action-row-left action-row-qr-wrap">
+                  <svg class="action-qr-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    aria-hidden="true">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                  </svg>
+                  <span class="action-tag">SCAN QR / UPI ID</span>
+                </div>
+                <div class="action-row-right" aria-hidden="true">
+                  <svg class="action-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="7" y1="17" x2="17" y2="7" />
+                    <polyline points="7 7 17 7 17 17" />
+                  </svg>
+                </div>
+              </button>
+            </div>
 
             <!-- Email Action -->
             <a href="mailto:abdhullarikhash@gmail.com" class="btn-action-row"
@@ -336,12 +358,11 @@
       <div class="upi-modal-sheet">
         <div class="upi-drag-handle" aria-hidden="true"></div>
 
-        <!-- Header -->
+        <!-- Header: Title and Payee Name -->
         <div class="upi-modal-header">
           <div class="upi-modal-title-group">
-            <!-- <span class="upi-meta-tag">DIRECT TRANSFER // UPI</span> -->
             <h3 id="upi-modal-title" class="upi-modal-title">Pay via UPI</h3>
-            <span class="upi-payee-name">Payee: Abdullah Rikash</span>
+            <span class="upi-payee-name">Payee: Abdul Rikash</span>
           </div>
           <button type="button" class="upi-modal-close" id="upi-modal-close" aria-label="Close payment dialog">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -352,64 +373,44 @@
           </button>
         </div>
 
-        <!-- Dynamic Content Body -->
+        <!-- Content Body: ONLY QR Code and UPI ID with Copy Button -->
         <div class="upi-modal-body">
-
-          <!-- Cinematic Loading Animation -->
-          <div class="upi-loader" id="upi-loader" aria-live="polite">
-            <div class="upi-spinner" aria-hidden="true"></div>
-            <span class="upi-loader-text">INITIALIZING UPI TERMINAL</span>
-          </div>
-
-              <!-- Content View (Gracefully reveals when ready) -->
-              <div class="upi-content-view" id="upi-content-view">
-                <!-- Fallback Alert Notice -->
-                <div class="upi-fallback-notice" id="upi-fallback-notice" style="display: none;">
-                  <span>Could not open UPI app directly. You can copy the UPI ID below or scan the QR code.</span>
-                </div>
-
-                  <!-- QR Code Section -->
-                  <div class="upi-qr-card">
-                    <div class="upi-qr-frame" id="upi-qr-container">
-                      <!-- Rendered black-on-white SVG with quiet zone injected here -->
-                    </div>
-                    <span class="upi-qr-caption">SCAN WITH ANY UPI APP (GPAY, PHONEPE, PAYTM)</span>
-                  </div>
-
-                  <!-- UPI ID Copy Bar -->
-                  <div class="upi-id-bar">
-                    <div class="upi-id-details">
-                      <span class="upi-id-label">UPI ID</span>
-                      <span class="upi-id-value" id="upi-id-text">rikhashp@okaxis</span>
-                    </div>
-                    <button type="button" class="btn-copy-upi" id="btn-copy-upi" aria-label="Copy UPI ID to clipboard">
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                      </svg>
-                      <span id="btn-copy-upi-text">Copy</span>
-                    </button>
-                  </div>
-                </div>
-
-              </div>
-
-              <!-- <div class="upi-modal-footer">
-          <span class="upi-footer-meta">ZERO FEE DIRECT TRANSFER &bull; RECIPIENT VERIFIED</span>
-        </div> -->
-
+          <!-- QR Code Section -->
+          <div class="upi-qr-card">
+            <div class="upi-qr-frame" id="upi-qr-container">
+              <!-- Rendered black-on-white SVG with quiet zone injected here -->
             </div>
+            <span class="upi-qr-caption">Scan with any UPI app</span>
+          </div>
+
+          <!-- UPI ID Copy Bar -->
+          <div class="upi-id-bar">
+            <div class="upi-id-details">
+              <span class="upi-id-label">UPI ID</span>
+              <span class="upi-id-value" id="upi-id-text">rikhashp@okaxis</span>
+            </div>
+            <button type="button" class="btn-copy-upi" id="btn-copy-upi" aria-label="Copy UPI ID to clipboard">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span id="btn-copy-upi-text">Copy</span>
+            </button>
           </div>
         </div>
 
-        <!-- Toast Notification -->
-        <div id="toast" class="toast" role="status" aria-live="polite" aria-hidden="true">
-          <span class="toast-indicator" aria-hidden="true"></span>
-          <span id="toast-message" class="toast-message">Profile link copied to clipboard</span>
-        </div>
+      </div>
+    </div>
+  </div>
 
-        <script src="script.js"></script>
+  <!-- Toast Notification -->
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-hidden="true">
+    <span class="toast-indicator" aria-hidden="true"></span>
+    <span id="toast-message" class="toast-message">Profile link copied to clipboard</span>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 
 </html>
