@@ -1,0 +1,4 @@
+<IfModule mod_mime.c>
+  AddType text/vcard .vcf
+</IfModule>
+

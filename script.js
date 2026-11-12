@@ -33,6 +33,7 @@
   const introOverlay = document.getElementById('intro-overlay');
   const introSkipBtn = document.getElementById('intro-skip-btn');
   const btnSaveContact = document.getElementById('btn-save-contact');
+  const saveContactHint = document.getElementById('save-contact-hint');
   const btnShare = document.getElementById('btn-share');
   const payUpiBtn = document.getElementById('pay-upi-btn');
   const upiSheetBtn = document.getElementById('upi-sheet-btn');
@@ -140,95 +141,25 @@
   }
 
   /**
-   * Generate standard vCard 3.0
+   * Save Contact: navigate directly to static vCard file on every device.
+   * On Android, display a quiet 6s hint instructing to tap Open on the download.
    */
-  function generateVCard() {
-    const vcard = [
-      'BEGIN:VCARD',
-      'VERSION:3.0',
-      `N:${PROFILE_DATA.lastName};${PROFILE_DATA.firstName};;;`,
-      `FN:${PROFILE_DATA.name}`,
-      `TITLE:${PROFILE_DATA.role}`,
-      `ORG:${PROFILE_DATA.org}`,
-      `TEL;TYPE=CELL:${PROFILE_DATA.phone}`,
-      `EMAIL;TYPE=INTERNET,WORK:${PROFILE_DATA.email}`,
-      `ADR;TYPE=WORK:;;;${PROFILE_DATA.city};${PROFILE_DATA.state};;${PROFILE_DATA.country}`,
-      `URL:${PROFILE_DATA.instagram}`,
-      `NOTE:${PROFILE_DATA.note}`,
-      'END:VCARD'
-    ].join('\r\n');
+    let hintTimer = null;
 
-    return vcard;
-  }
+  function handleSaveContact() {
+    const ua = navigator.userAgent || '';
+    const isAndroid = /Android/i.test(ua);
 
-  /**
-   * Download vCard file
-   */
-    function downloadVCardFile(showToastNotice = true) {
-      const vcardContent = generateVCard();
-      const blob = new Blob([vcardContent], { type: 'text/vcard;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-
-      const anchor = document.createElement('a');
-      anchor.href = url;
-      anchor.download = 'Abdullah_Rikhash.vcf';
-      anchor.style.display = 'none';
-      document.body.appendChild(anchor);
-      anchor.click();
-
-      setTimeout(() => {
-        document.body.removeChild(anchor);
-        URL.revokeObjectURL(url);
-      }, 400);
-
-      if (showToastNotice) {
-        showToast('Contact card downloaded');
-      }
-    }
-
-    /**
-     * Save Contact handler adapted for Android Chrome intent, iOS Safari sheet, and Desktop
-     */
-    function handleSaveContact() {
-      const ua = navigator.userAgent || '';
-      const isAndroid = /Android/i.test(ua);
-      const isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-
-      if (isAndroid) {
-        const androidIntent = 'intent:#Intent;action=android.intent.action.INSERT;type=vnd.android.cursor.dir/contact;'
-          + 'S.name=' + encodeURIComponent(PROFILE_DATA.name) + ';'
-          + 'S.phone=%2B918891456003;'
-          + 'S.email=' + encodeURIComponent(PROFILE_DATA.email) + ';'
-          + 'S.company=' + encodeURIComponent(PROFILE_DATA.companyShort) + ';'
-          + 'S.job_title=' + encodeURIComponent(PROFILE_DATA.role) + ';'
-          + 'end';
-
-        window.location.href = androidIntent;
-
-        setTimeout(() => {
-          if (document.visibilityState === 'visible') {
-            // Silently fall back to downloading .vcf file (show no toast, banner or modal)
-            downloadVCardFile(false);
-          }
-        }, 1200);
-        return;
+      if (isAndroid && saveContactHint) {
+        if (hintTimer) clearTimeout(hintTimer);
+        saveContactHint.classList.add('is-visible');
+        hintTimer = setTimeout(() => {
+          saveContactHint.classList.remove('is-visible');
+        }, 6000);
       }
 
-      if (isIOS) {
-        // iOS Safari: open vCard blob URL in same tab so iOS native "Add Contact" sheet opens
-        const vcardContent = generateVCard();
-        const blob = new Blob([vcardContent], { type: 'text/vcard;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        window.location.href = url;
-        setTimeout(() => {
-          URL.revokeObjectURL(url);
-        }, 2000);
-        return;
+        window.location.href = '/abdul-rikash.vcf';
       }
-
-      // Desktop
-      downloadVCardFile(true);
-    }
 
     /**
      * Share Profile Link
