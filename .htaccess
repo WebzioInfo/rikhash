@@ -2,3 +2,9 @@
   AddType text/vcard .vcf
 </IfModule>
 
+<IfModule mod_headers.c>
+  <FilesMatch "\.vcf$">
+    Header set Content-Type "text/vcard; charset=utf-8"
+    Header set Content-Disposition "inline; filename=\"abdul-rikash.vcf\""
+  </FilesMatch>
+</IfModule>
